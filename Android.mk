@@ -59,7 +59,8 @@ LOCAL_C_INCLUDES += system/extras/ext4_utils
 LOCAL_STATIC_LIBRARIES += libext4_utils_static libz
 
 LOCAL_CFLAGS += -DUSE_UBIFS
-LOCAL_C_INCLUDES += external/mtd-utils/new-utils/include/
+LOCAL_C_INCLUDES += external/mtd-utils/include/
+LOCAL_C_INCLUDES += external/mtd-utils/ubi-utils/include/
 LOCAL_STATIC_LIBRARIES += libubi
 LOCAL_SRC_FILES += ubi.cpp
 

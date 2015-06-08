@@ -26,14 +26,14 @@ extern "C" int ubiVolumeFormat(char *location)
     libubi_t libubi;
     struct ubi_vol_info vol_info;
     int fd;
-    libubi = libubi_open(1);
+    libubi = libubi_open();
 
     if (libubi == NULL) {
         fprintf(stderr, "can not open libubi");
         goto done;
     }
 
-    ret = ubi_node_type(libubi, location);
+    ret = ubi_probe_node(libubi, location);
     if (ret == 1) {
         fprintf(stderr, "%s is a ubi device node, not a ubi volume node",
                 location);

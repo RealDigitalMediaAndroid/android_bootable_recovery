@@ -70,7 +70,8 @@ $(call intermediates-dir-for,EXECUTABLES,updater)/updater.o : $(inc)
 LOCAL_C_INCLUDES += $(dir $(inc))
 
 LOCAL_CFLAGS += -DUSE_UBIFS
-LOCAL_C_INCLUDES += external/mtd-utils/new-utils/include/
+LOCAL_C_INCLUDES += external/mtd-utils/include/
+LOCAL_C_INCLUDES += external/mtd-utils/ubi-utils/include/
 LOCAL_STATIC_LIBRARIES += libubi
 LOCAL_SRC_FILES += ../ubi.cpp
 
