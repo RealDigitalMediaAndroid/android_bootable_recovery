@@ -25,11 +25,13 @@
 #include <string.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#include <gw_android_flags.h>
 
 static int get_bootloader_message_mtd(struct bootloader_message *out, const Volume* v);
 static int set_bootloader_message_mtd(const struct bootloader_message *in, const Volume* v);
 static int get_bootloader_message_block(struct bootloader_message *out, const Volume* v);
 static int set_bootloader_message_block(const struct bootloader_message *in, const Volume* v);
+static void set_gateworks_recovery_flag(const struct bootloader_message *in);
 
 int get_bootloader_message(struct bootloader_message *out) {
     Volume* v = volume_for_path("/misc");
@@ -52,6 +54,7 @@ int set_bootloader_message(const struct bootloader_message *in) {
       LOGE("Cannot load volume /misc!\n");
       return -1;
     }
+    set_gateworks_recovery_flag(in);
     if (strcmp(v->fs_type, "mtd") == 0) {
         return set_bootloader_message_mtd(in, v);
     } else if (strcmp(v->fs_type, "emmc") == 0) {
@@ -59,6 +62,19 @@ int set_bootloader_message(const struct bootloader_message *in) {
     }
     LOGE("unknown misc partition fs_type \"%s\"\n", v->fs_type);
     return -1;
+}
+
+// ------------------------------
+// Gateworks Recovery Flag
+// ------------------------------
+
+static void set_gateworks_recovery_flag(const struct bootloader_message *in) {
+    unsigned char *p = (unsigned char*)in;
+    unsigned char *end = p + sizeof(*in);
+    while (p < end && !*p) p++;
+    // if message is not null, need recovery boot
+    if (set_gw_android_recovery_flag(p < end))
+        LOGE("Failed to set Gateworks I2C Android recovery flag!\n");
 }
 
 // ------------------------------
