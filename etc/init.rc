@@ -47,11 +47,16 @@ on boot
 on property:sys.powerctl=*
    powerctl ${sys.powerctl}
 
+## TODO: Do this instead
+##       https://github.com/crdroidandroid/android_system_core/commit/5d31618b987cef89ecf5cf980b048f0b5349f0bd
+
 service ueventd /sbin/ueventd
     critical
+    seclabel u:r:ueventd:s0
 
 service healthd /sbin/healthd -n
     critical
+    seclabel u:r:healthd:s0
 
 service recovery /sbin/recovery
 
