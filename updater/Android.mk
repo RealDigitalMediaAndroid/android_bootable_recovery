@@ -20,9 +20,11 @@ LOCAL_SRC_FILES := $(updater_src_files)
 
 LOCAL_CFLAGS += -DUSE_EXT4
 LOCAL_C_INCLUDES += system/extras/ext4_utils
+LOCAL_C_INCLUDES += system/core/fs_mgr/include
 LOCAL_STATIC_LIBRARIES += \
     libext4_utils_static \
     libsparse_static \
+    libfs_mgr \
     libz
 
 LOCAL_STATIC_LIBRARIES += $(TARGET_RECOVERY_UPDATER_LIBS) $(TARGET_RECOVERY_UPDATER_EXTRA_LIBS)

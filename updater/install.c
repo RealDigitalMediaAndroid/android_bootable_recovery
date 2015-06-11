@@ -33,6 +33,7 @@
 #include <sys/xattr.h>
 #include <linux/xattr.h>
 #include <inttypes.h>
+#include <fs_mgr.h>
 
 #include "bootloader.h"
 #include "applypatch/applypatch.h"
@@ -91,6 +92,7 @@ Value* MountFn(const char* name, State* state, int argc, Expr* argv[]) {
         ErrorAbort(state, "mount_point argument to %s() can't be empty", name);
         goto done;
     }
+    location = fs_mgr_expand_device_name(location);
 
     char *secontext = NULL;
 
@@ -243,6 +245,7 @@ Value* FormatFn(const char* name, State* state, int argc, Expr* argv[]) {
         ErrorAbort(state, "mount_point argument to %s() can't be empty", name);
         goto done;
     }
+    location = fs_mgr_expand_device_name(location);
 
     if (strcmp(partition_type, "MTD") == 0) {
         mtd_scan_partitions();
