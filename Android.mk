@@ -71,7 +71,7 @@ ifeq ($(HAVE_SELINUX), true)
 endif # HAVE_SELINUX
 
 LOCAL_C_INCLUDES += device/gateworks/ventana/overlay/external/gw_android_flags
-LOCAL_STATIC_LIBRARIES += gw_android_flags i2c-tools
+LOCAL_STATIC_LIBRARIES += gw_android_flags
 
 # This binary is in the recovery ramdisk, which is otherwise a copy of root.
 # It gets copied there in config/Makefile.  LOCAL_MODULE_TAGS suppresses
@@ -106,7 +106,7 @@ LOCAL_STATIC_LIBRARIES := \
     libstdc++ \
     libc
 LOCAL_C_INCLUDES += device/gateworks/ventana/overlay/external/gw_android_flags
-LOCAL_STATIC_LIBRARIES += gw_android_flags i2c-tools
+LOCAL_STATIC_LIBRARIES += gw_android_flags
 include $(BUILD_EXECUTABLE)
 
 
