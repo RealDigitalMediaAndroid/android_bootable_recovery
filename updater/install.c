@@ -1455,12 +1455,16 @@ Value* RebootNowFn(const char* name, State* state, int argc, Expr* argv[]) {
     char* filename;
     char* property;
     if (ReadArgs(state, argv, 2, &filename, &property) < 0) return NULL;
+    filename = fs_mgr_expand_device_name(filename);
 
     char buffer[80];
 
     // zero out the 'command' field of the bootloader message.
     memset(buffer, 0, sizeof(((struct bootloader_message*)0)->command));
     FILE* f = fopen(filename, "r+b");
+    if (!f) {
+        return ErrorAbort(state, "reboot_now failed to open %s", filename);
+    }
     fseek(f, offsetof(struct bootloader_message, command), SEEK_SET);
     fwrite(buffer, sizeof(((struct bootloader_message*)0)->command), 1, f);
     fclose(f);
@@ -1497,12 +1501,16 @@ Value* SetStageFn(const char* name, State* state, int argc, Expr* argv[]) {
     char* filename;
     char* stagestr;
     if (ReadArgs(state, argv, 2, &filename, &stagestr) < 0) return NULL;
+    filename = fs_mgr_expand_device_name(filename);
 
     // Store this value in the misc partition, immediately after the
     // bootloader message that the main recovery uses to save its
     // arguments in case of the device restarting midway through
     // package installation.
     FILE* f = fopen(filename, "r+b");
+    if (!f) {
+        return ErrorAbort(state, "set_stage failed to open %s", filename);
+    }
     fseek(f, offsetof(struct bootloader_message, stage), SEEK_SET);
     int to_write = strlen(stagestr)+1;
     int max_size = sizeof(((struct bootloader_message*)0)->stage);
@@ -1526,9 +1534,13 @@ Value* GetStageFn(const char* name, State* state, int argc, Expr* argv[]) {
 
     char* filename;
     if (ReadArgs(state, argv, 1, &filename) < 0) return NULL;
+    filename = fs_mgr_expand_device_name(filename);
 
     char buffer[sizeof(((struct bootloader_message*)0)->stage)];
     FILE* f = fopen(filename, "rb");
+    if (!f) {
+        return ErrorAbort(state, "get_stage failed to open %s", filename);
+    }
     fseek(f, offsetof(struct bootloader_message, stage), SEEK_SET);
     fread(buffer, sizeof(buffer), 1, f);
     fclose(f);
